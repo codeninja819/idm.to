@@ -230,7 +230,7 @@ function App() {
             </div>
           </div>
         </div>
-        <footer className="container relative justify-center my-8 flex flex-col items-center space-y-4">
+        <footer className="relative justify-center my-8 flex flex-col items-center space-y-4">
           <div className="flex space-x-4">
             <Link
               className="underline"
