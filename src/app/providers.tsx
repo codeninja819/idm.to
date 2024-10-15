@@ -7,6 +7,7 @@ import { type State, WagmiProvider } from 'wagmi'
 import { config, networks, projectId, wagmiAdapter } from '@/wagmi'
 import { createAppKit } from '@reown/appkit/react'
 import { ThemeProvider } from 'next-themes'
+import { Toaster } from 'react-hot-toast'
 
 const queryClient = new QueryClient()
 
@@ -34,6 +35,7 @@ export function Providers(props: {
 }) {
   return (
     <WagmiProvider config={config} initialState={props.initialState}>
+      <Toaster />
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>{props.children}</ThemeProvider>
       </QueryClientProvider>

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Button } from '@headlessui/react'
-import { Moon, Sun } from 'lucide-react'
+import { SunIcon, MoonIcon } from '@heroicons/react/20/solid'
 import { useTheme } from 'next-themes'
 
 function TopBar() {
@@ -15,26 +15,26 @@ function TopBar() {
 
   return (
     <>
-      <div className="w-full shadow-md">
+      <div className="w-full shadow-md bg-white dark:bg-white/5">
         <div className="container mx-auto px-4 py-2 flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <Link href="/" className="text-2xl font-bold text-primary">
-              IDM.TO  
+              IDM.TO
             </Link>
           </div>
           <div className="flex items-center space-x-4">
             <Link
               href="https://github.com/codeninja819/idm.to"
               className="text-sm text-gray-600 dark:text-gray-300 hover:text-primary"
-              target='_blank'
+              target="_blank"
             >
               GitHub
             </Link>
             <Button onClick={toggleDarkMode}>
               {theme === 'light' ? (
-                <Sun className="h-5 w-5" />
+                <SunIcon className="size-5" />
               ) : (
-                <Moon className="h-5 w-5" />
+                <MoonIcon className="size-5" />
               )}
             </Button>
             <w3m-button />

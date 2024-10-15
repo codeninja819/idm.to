@@ -14,6 +14,9 @@ export default function RootLayout(props: { children: ReactNode }) {
 
   return (
     <html lang="en">
+      <head>
+        <title>IDM.TO</title>
+      </head>
       <body className={inter.className}>
         <Providers initialState={initialState}>{props.children}</Providers>
       </body>
