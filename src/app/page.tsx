@@ -40,7 +40,7 @@ function App() {
   ]
 
   const sendMessage = async () => {
-    if (!from) {
+    if (!from || !isAddress(from)) {
       toast.error('Please select a wallet.')
       return
     }
@@ -99,7 +99,7 @@ function App() {
                       'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-black/25 dark:data-[focus]:outline-white/25 overflow-hidden text-ellipsis',
                     )}
                   >
-                    {from}
+                    {from || 'Select a wallet'}
                     <ChevronDownIcon
                       className="group pointer-events-none absolute top-2.5 right-2.5 size-4 fill-white/60"
                       aria-hidden="true"
