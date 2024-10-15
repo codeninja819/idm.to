@@ -15,7 +15,7 @@ function TopBar() {
 
   return (
     <>
-      <div className="w-full shadow-md bg-white dark:bg-white/5">
+      <header className="w-full shadow-md bg-white dark:bg-white/5">
         <div className="container mx-auto px-4 py-2 flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <Link href="/" className="text-2xl font-bold text-primary">
@@ -40,7 +40,7 @@ function TopBar() {
             <w3m-button />
           </div>
         </div>
-      </div>
+      </header>
     </>
   )
 }

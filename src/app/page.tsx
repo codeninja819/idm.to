@@ -15,29 +15,44 @@ import {
   Textarea,
 } from '@headlessui/react'
 import clsx from 'clsx'
-import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
-import { useState } from 'react'
+import {
+  ArrowPathIcon,
+  CheckIcon,
+  ChevronDownIcon,
+} from '@heroicons/react/20/solid'
+import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { useAccount, usePublicClient, useSendTransaction } from 'wagmi'
-import { isAddress, parseEther, toHex } from 'viem'
+import {
+  useAccount,
+  usePrepareTransactionRequest,
+  usePublicClient,
+  useSendTransaction,
+} from 'wagmi'
+import { formatEther, isAddress, parseEther, toHex } from 'viem'
+import Link from 'next/link'
 
 function App() {
   const { address, addresses } = useAccount()
   const { sendTransactionAsync } = useSendTransaction()
   const publicClient = usePublicClient()
 
-  const [from, setFrom] = useState(address)
+  const [from, setFrom] = useState('Select a wallet')
   const [to, setTo] = useState('')
   const [message, setMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [tip, setTip] = useState(false)
   const [value, setValue] = useState('')
 
-  const connectedWallets = [
-    { address: '0x1234...5678', name: 'MetaMask 1' },
-    { address: '0x5678...9ABC', name: 'WalletConnect' },
-    { address: '0x9ABC...DEF0', name: 'Coinbase Wallet' },
-  ]
+  useEffect(() => {
+    if (address) setFrom(address)
+  }, [address])
+
+  const { data: txRequest, isFetching } = usePrepareTransactionRequest({
+    account: from as `0x${string}`,
+    to: to as `0x${string}`,
+    data: toHex(message),
+    value: tip ? parseEther(value) : 0n,
+  })
 
   const sendMessage = async () => {
     if (!from || !isAddress(from)) {
@@ -59,22 +74,19 @@ function App() {
 
     setIsLoading(true)
     try {
-      await toast.promise(
-        (async () => {
-          const hash = await sendTransactionAsync({
-            account: from,
-            to: to as `0x${string}`,
-            data: toHex(message),
-            value: parseEther(value),
-          })
-          await publicClient?.waitForTransactionReceipt({ hash })
-        })(),
-        {
-          loading: 'Sending message...',
-          success: 'Message sent successfully!',
-          error: 'Failed to send message.',
-        },
-      )
+      if (txRequest)
+        await toast.promise(
+          (async () => {
+            const hash = await sendTransactionAsync(txRequest)
+            await publicClient?.waitForTransactionReceipt({ hash })
+          })(),
+          {
+            loading: 'Sending message...',
+            success: 'Message sent successfully!',
+            error: 'Failed to send message.',
+          },
+        )
+      else throw new Error('Simulation failed.')
     } catch (error) {
       console.error('Failed to send message:', error)
     } finally {
@@ -99,7 +111,7 @@ function App() {
                       'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-black/25 dark:data-[focus]:outline-white/25 overflow-hidden text-ellipsis',
                     )}
                   >
-                    {from || 'Select a wallet'}
+                    {from}
                     <ChevronDownIcon
                       className="group pointer-events-none absolute top-2.5 right-2.5 size-4 fill-white/60"
                       aria-hidden="true"
@@ -170,7 +182,7 @@ function App() {
 
               {tip && (
                 <Field>
-                  <Label className="text-sm/6 font-medium">Amount</Label>
+                  <Label className="text-sm/6 font-medium">Amount (ETH)</Label>
                   <Input
                     className={clsx(
                       'mt-3 block w-full rounded-lg border-none bg-black/5 dark:bg-white/5 py-1.5 px-3 text-sm/6 text-black dark:text-white',
@@ -185,6 +197,29 @@ function App() {
                 </Field>
               )}
 
+              <div className="flex flex-row items-center text-sm text-neutral-600 dark:text-neutral-400">
+                Gas Fee:&nbsp;
+                {isFetching && (
+                  <div className="animate-spin">
+                    <ArrowPathIcon className="size-4" />
+                  </div>
+                )}
+                {!isFetching &&
+                  ` ${
+                    txRequest
+                      ? txRequest.maxFeePerGas * txRequest.gas <
+                        100000000000000n
+                        ? '<0.0001'
+                        : `~${Number.parseFloat(
+                            formatEther(txRequest.maxFeePerGas * txRequest.gas),
+                          ).toFixed(4)}`
+                      : '-'
+                  } ETH`}
+                {!isFetching && !txRequest && (
+                  <span className="text-red-500/80">&nbsp;(likely to fail)</span>
+                )}
+              </div>
+
               <Button
                 className="w-full justify-center inline-flex items-center gap-2 rounded-md bg-neutral-300 dark:bg-neutral-700 py-1.5 px-3 text-sm/6 font-semibold text-black dark:text-white shadow-inner shadow-white/90 dark:shadow-white/10 focus:outline-none data-[hover]:bg-neutral-200 dark:data-[hover]:bg-neutral-600 data-[open]:bg-neutral-300 dark:data-[open]:bg-neutral-700 data-[focus]:outline-1 data-[focus]:outline-black dark:data-[focus]:outline-white"
                 onClick={sendMessage}
@@ -195,6 +230,45 @@ function App() {
             </div>
           </div>
         </div>
+        <footer className="container relative justify-center my-8 flex flex-col items-center space-y-4">
+          <div className="flex space-x-4">
+            <Link
+              className="underline"
+              href="https://github.com/timolins/react-hot-toast"
+              target="_blank"
+            >
+              GitHub
+            </Link>
+            <Link
+              className="underline"
+              href="https://etherscan.io/address/0x7488903781C6dF233E6f3f3845be65CE02d399bA"
+              target="_blank"
+            >
+              Donate
+            </Link>
+            <Link
+              className="underline"
+              href="https://x.com/codeninja819"
+              target="_blank"
+            >
+              X
+            </Link>
+          </div>
+          <div className="text-toast-600">
+            <span>&copy; 2024 IDM.TO</span>
+            <span>&nbsp;&middot;&nbsp;</span>
+            <span>
+              <span>Built by </span>
+              <Link
+                className="underline"
+                href="https://github.com/codeninja819"
+                target="_blank"
+              >
+                Jiro Matsumoto
+              </Link>
+            </span>
+          </div>
+        </footer>
       </div>
     </>
   )
