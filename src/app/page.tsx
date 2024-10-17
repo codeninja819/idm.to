@@ -6,8 +6,10 @@ import {
   Checkbox,
   Description,
   Field,
+  Fieldset,
   Input,
   Label,
+  Legend,
   Listbox,
   ListboxButton,
   ListboxOption,
@@ -99,8 +101,10 @@ function App() {
       <div className="min-h-screen flex flex-col">
         <TopBar />
         <div className="flex-grow flex items-center justify-center p-4">
-          <div className="rounded-xl bg-white dark:bg-white/5 backdrop-blur-2xl p-8 shadow-md w-full max-w-md">
-            <h1 className="text-2xl font-bold mb-6 text-center">Send an IDM</h1>
+          <Fieldset className="rounded-xl bg-white dark:bg-white/5 backdrop-blur-2xl p-8 shadow-md w-full max-w-md">
+            <Legend className="text-2xl font-bold mb-6 text-center">
+              Send an IDM
+            </Legend>
             <div className="space-y-4">
               <Field>
                 <Label className="text-sm/6 font-medium">From</Label>
@@ -216,7 +220,9 @@ function App() {
                       : '-'
                   } ETH`}
                 {!isFetching && !txRequest && (
-                  <span className="text-red-500/80">&nbsp;(likely to fail)</span>
+                  <span className="text-red-500/80">
+                    &nbsp;(likely to fail)
+                  </span>
                 )}
               </div>
 
@@ -228,7 +234,7 @@ function App() {
                 {isLoading ? 'Sending...' : 'Send Message'}
               </Button>
             </div>
-          </div>
+          </Fieldset>
         </div>
         <footer className="relative justify-center my-8 flex flex-col items-center space-y-4">
           <div className="flex space-x-4">
