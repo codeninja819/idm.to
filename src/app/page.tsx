@@ -111,11 +111,11 @@ function App() {
                 <Listbox value={from} onChange={setFrom}>
                   <ListboxButton
                     className={clsx(
-                      'relative mt-3 block w-full rounded-lg bg-black/5 dark:bg-white/5 py-1.5 pr-8 pl-3 text-left text-sm/6 text-black dark:text-white',
+                      'flex items-center relative mt-3 w-full rounded-lg bg-black/5 dark:bg-white/5 py-1.5 pr-8 pl-3 text-left text-sm/6 text-black dark:text-white',
                       'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-black/25 dark:data-[focus]:outline-white/25 overflow-hidden text-ellipsis',
                     )}
                   >
-                    {from}
+                    <span className='flex-1 w-0 truncate'>{from}</span>
                     <ChevronDownIcon
                       className="group pointer-events-none absolute top-2.5 right-2.5 size-4 fill-white/60"
                       aria-hidden="true"
