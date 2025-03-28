@@ -240,7 +240,7 @@ function App() {
           <div className="flex space-x-4">
             <Link
               className="underline"
-              href="https://github.com/timolins/react-hot-toast"
+              href="https://github.com/codeninja819/idm.to"
               target="_blank"
             >
               GitHub
