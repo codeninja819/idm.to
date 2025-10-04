@@ -9,6 +9,7 @@ import {
   optimism,
   polygon,
   sepolia,
+  plasma,
   type AppKitNetwork,
 } from '@reown/appkit/networks'
 
@@ -26,6 +27,7 @@ export const networks = [
   base,
   optimism,
   polygon,
+  plasma,
   ...(process.env.NODE_ENV === 'development' ? [sepolia] : []),
 ] as [AppKitNetwork, ...AppKitNetwork[]]
 
